@@ -372,13 +372,9 @@
           </div>
           <div class="order-actions">
             <button class="btn btn-square" id="payOrderBtn" type="button" disabled>Pedir y pagar</button>
-            <a class="btn btn-whatsapp" id="waOrderBtn" href="#pedido" disabled>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5-.3.6-.6.8-.4 1.1.7 1.2 1.6 2 2.8 2.6.3.2.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 .9c.3.2.5.3.6.4 0 .1 0 .7-.2 1.2z"/></svg>
-              Ordenar por WhatsApp (sin pagar en línea)
-            </a>
             <button class="btn btn-copy" id="copyOrderBtn" type="button">Copiar mi pedido</button>
           </div>
-          <p class="pay-first-note">Como es comida recién hecha, tu pedido se paga al ordenar para apartarlo — así queda reservado para ti. Al pagar aquí, Yoyis recibe tu pedido al instante. Si ordenas por WhatsApp, tu pedido NO queda pagado: Yoyis te confirma el pago antes de prepararlo.</p>
+          <p class="pay-first-note">Como es comida recién hecha, tu pedido se paga al ordenar para apartarlo — así queda reservado para ti. Al pagar aquí, Yoyis recibe tu pedido al instante.</p>
           <p class="order-hint">Escribe tu nombre, toca «Pedir y pagar» y paga el total exacto en la página segura de Square: Yoyis recibe tu pedido en ese momento y lo prepara para recoger en Hutto, TX. Sin registro y sin apps raras.</p>
         </div>
       </section>
@@ -426,7 +422,7 @@
         <div class="tiles">
           <div class="tile">
             <h3><span class="ic">📍</span>Recogida local en Hutto, TX</h3>
-            <p>La venta es solo local: compras y pagas en la página, Yoyis recibe tu pedido al instante y pasas a recogerlo — te lo llevas tú. El lugar y el horario exactos de recogida te los confirma Yoyis por WhatsApp.</p>
+            <p>La venta es solo local: compras y pagas en la página, Yoyis recibe tu pedido al instante y pasas a recogerlo — te lo llevas tú. El lugar y el horario exactos de recogida te los confirma Yoyis al recibir tu pedido.</p>
           </div>
           <div class="tile">
             <h3><span class="ic">🎉</span>Fiestas y pedidos grandes</h3>
@@ -659,7 +655,6 @@
           lines.push(s);
         });
         if (allPriced(items)) lines.push("Total: " + money(cartTotal(items)));
-        lines.push("⚠️ Todavía NO pagué en línea: quiero acordar el pago contigo.");
         var name = document.getElementById("custName").value.trim();
         var phone = document.getElementById("custPhone").value.trim();
         var note = document.getElementById("custNote").value.trim();
@@ -696,7 +691,6 @@
           totalEl.style.cssText = "";
         }
         renderSquareSummary(items);
-        renderWhatsapp(items);
         renderPayBtn(items);
       }
 
@@ -735,24 +729,10 @@
         } catch (e) {
           btn.disabled = false;
           btn.textContent = original;
-          toast("No se pudo crear el pago. Intenta de nuevo o pide por WhatsApp.");
+          toast("No se pudo crear el pago. Intenta de nuevo en un momento.");
         }
       });
 
-      /* ---------- Enviar pedido por WhatsApp ---------- */
-      function renderWhatsapp(items) {
-        var btn = document.getElementById("waOrderBtn");
-        if (items.length && CONFIG.whatsapp) {
-          btn.removeAttribute("disabled");
-          btn.setAttribute("href", "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(orderText()));
-          btn.setAttribute("target", "_blank");
-          btn.setAttribute("rel", "noopener");
-        } else {
-          btn.setAttribute("disabled", "");
-          btn.setAttribute("href", "#pedido");
-          btn.removeAttribute("target");
-        }
-      }
 
       ["custName", "custPhone", "custNote"].forEach(function (id) {
         document.getElementById(id).addEventListener("input", function () { renderOrder(); });

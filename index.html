@@ -131,6 +131,18 @@
         padding:24px; max-width:720px; margin:0 auto;
       }
       .order-panel h3{ font-size:1.5rem; margin-bottom:6px; }
+      .how-steps{ max-width:720px; margin:0 auto 16px; background:var(--surface); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:16px 18px; }
+      .how-steps .how-title{ font-family:"Lilita One",sans-serif; font-size:1.08rem; margin:0 0 10px; text-align:center; }
+      .how-list{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+      @media (max-width:680px){ .how-list{ grid-template-columns:1fr 1fr; } }
+      .how-list li{ display:flex; align-items:flex-start; gap:8px; font-size:.94rem; font-weight:600; line-height:1.35; }
+      .how-num{ width:26px; height:26px; flex:none; border-radius:50%; background:var(--pink); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-family:"Lilita One",sans-serif; font-size:.95rem; line-height:1; margin-top:1px; }
+      .how-list li:nth-child(2) .how-num{ background:var(--square); color:var(--bg); }
+      @media (prefers-color-scheme: dark){ .how-list li:nth-child(2) .how-num{ color:#1a0d14; } }
+      .how-list li:nth-child(3) .how-num{ background:#25d366; color:#06351c; }
+      .how-list li:nth-child(4) .how-num{ background:var(--cyan); color:#fff; }
+      .pay-first-note{ margin-top:16px; background:#fff3d6; color:#5c3a05; border:1.5px solid #f0d48a; border-radius:14px; padding:13px 15px; font-size:.96rem; line-height:1.5; }
+      @media (prefers-color-scheme: dark){ .pay-first-note{ background:#3a2a08; color:#ffe1a1; border-color:#6b5316; } }
       .order-empty{ color:var(--ink-soft); margin:6px 0 0; }
       .order-lines{ list-style:none; margin:10px 0 0; padding:0; }
       .order-lines li{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px dashed var(--line); flex-wrap:wrap; }
@@ -329,6 +341,15 @@
         <div class="sec-head">
           <h2>Tu <span class="c">carrito</span></h2>
         </div>
+        <div class="how-steps" aria-label="Así funciona">
+          <p class="how-title">Así funciona:</p>
+          <ol class="how-list">
+            <li><span class="how-num" aria-hidden="true">1</span><span>Arma tu pedido</span></li>
+            <li><span class="how-num" aria-hidden="true">2</span><span>Págalo con Square</span></li>
+            <li><span class="how-num" aria-hidden="true">3</span><span>Manda tu pedido por WhatsApp</span></li>
+            <li><span class="how-num" aria-hidden="true">4</span><span>Recoge en Hutto, TX</span></li>
+          </ol>
+        </div>
         <div class="order-panel">
           <h3>Resumen de tu pedido</h3>
           <p class="order-empty" id="orderEmpty">Todavía no agregas nada. Sube al menú y toca el + de lo que se te antoje. 🌶️</p>
@@ -346,13 +367,14 @@
             <textarea id="custNote" rows="2" placeholder="Ej. Lo recojo a las 2 pm · Que pique poquito"></textarea>
           </div>
           <div class="order-actions">
-            <a class="btn btn-square" href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener">Pagar con Square</a>
+            <a class="btn btn-square" href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener">Paso 2 · Pagar con Square</a>
             <a class="btn btn-whatsapp" id="waOrderBtn" href="#pedido" disabled>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5-.3.6-.6.8-.4 1.1.7 1.2 1.6 2 2.8 2.6.3.2.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 .9c.3.2.5.3.6.4 0 .1 0 .7-.2 1.2z"/></svg>
-              Enviar pedido por WhatsApp
+              Paso 3 · Enviar pedido por WhatsApp
             </a>
             <button class="btn btn-copy" id="copyOrderBtn" type="button">Copiar mi pedido</button>
           </div>
+          <p class="pay-first-note">Como es comida recién hecha, tu pedido se paga al ordenar para apartarlo — así queda reservado para ti. ¿Prefieres pagar al recoger? Avísanos por WhatsApp.</p>
           <p class="order-hint">Arma tu carrito, paga el total con Square y manda tu pedido por WhatsApp para que Yoyis lo tenga listo para recoger. Sin registro y sin apps raras.</p>
         </div>
       </section>
@@ -632,7 +654,7 @@
           lines.push(s);
         });
         if (allPriced(items)) lines.push("Total: " + money(cartTotal(items)));
-        lines.push("El pago lo hago con Square.");
+        lines.push("Ya pagué con Square.");
         var name = document.getElementById("custName").value.trim();
         var note = document.getElementById("custNote").value.trim();
         if (name) lines.push("Nombre: " + name);

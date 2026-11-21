@@ -439,7 +439,7 @@
         </div>
         <div class="fiesta-panel">
           <h3>Pide tu cotización</h3>
-          <p>Llena lo que sepas; al terminar, copia tu solicitud y mándasela a Yoyis por el medio que ya uses con ella (mensaje o llamada).</p>
+          <p>Llena lo que sepas y envíala: le llega directo a Yoyis y ella te contacta a tu teléfono para cotizarte.</p>
           <div class="form-grid">
             <div class="field">
               <label for="evType">¿Qué tipo de evento es?</label>
@@ -480,9 +480,9 @@
             <textarea id="evNote" rows="2" placeholder="Ej. Sería para recoger el sábado en la mañana"></textarea>
           </div>
           <div class="order-actions">
-            <button class="btn btn-fiesta" id="fiestaCopyBtn" type="button">Copiar mi solicitud</button>
+            <button class="btn btn-fiesta" id="fiestaCopyBtn" type="button">Enviar mi solicitud</button>
           </div>
-          <p class="order-hint">Tu solicitud se copia en tu teléfono, lista para pegarla donde le escribas a Yoyis. Nada se guarda en esta página.</p>
+          <p class="order-hint">Al enviarla, Yoyis la recibe al instante y te contacta a tu teléfono para darte tu cotización.</p>
         </div>
       </section>
     </main>
@@ -793,6 +793,7 @@
 
       /* ---------- Fiestas y pedidos grandes ---------- */
       document.getElementById("fiestaCopyBtn").addEventListener("click", function () {
+        var btn = this;
         var type = document.getElementById("evType").value;
         var people = document.getElementById("evPeople").value.trim();
         var date = document.getElementById("evDate").value;
@@ -800,23 +801,36 @@
         var phone = document.getElementById("evPhone").value.trim();
         var want = document.getElementById("evWant").value.trim();
         var note = document.getElementById("evNote").value.trim();
-        if (!type && !people && !name) {
-          toast("Cuéntanos al menos el tipo de evento, cuántas personas y tu nombre 🎉");
+        if (!name || !phone) {
+          toast("Escribe tu nombre y tu teléfono para que Yoyis te contacte 🎉");
+          if (!name) document.getElementById("evName").focus();
+          else document.getElementById("evPhone").focus();
           return;
         }
-        var lines = ["¡Hola Yoyis! Quiero cotizar un pedido grande para un evento:"];
-        if (type) lines.push("• Tipo de evento: " + type);
-        if (people) lines.push("• Personas: " + people);
+        var fecha = "";
         if (date) {
           var parts = date.split("-");
-          if (parts.length === 3) lines.push("• Fecha: " + parts[2] + "/" + parts[1] + "/" + parts[0]);
+          if (parts.length === 3) fecha = parts[2] + "/" + parts[1] + "/" + parts[0];
         }
-        if (want) lines.push("• Quiero pedir: " + want);
-        if (name) lines.push("• Nombre: " + name);
-        if (phone) lines.push("• Teléfono: " + phone);
-        if (note) lines.push("• Nota: " + note);
-        lines.push("¡Gracias!");
-        copyText(lines.join("\n"), "Solicitud copiada ✅ — pégala donde le escribas a Yoyis");
+        var details = want;
+        if (note) details = (details ? details + " — " : "") + note;
+        btn.disabled = true;
+        var original = btn.textContent;
+        btn.textContent = "Enviando…";
+        fetch(CONFIG.backend + "/api/fiesta", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: name, phone: phone, eventType: type, people: people, date: fecha, details: details })
+        }).then(function (res) {
+          if (!res.ok) throw new Error("bad");
+          toast("¡Solicitud enviada! 🎉 Yoyis te contactará a tu teléfono.");
+          ["evType", "evPeople", "evDate", "evName", "evPhone", "evWant", "evNote"].forEach(function (id) { document.getElementById(id).value = ""; });
+        }).catch(function () {
+          toast("No se pudo enviar. Intenta de nuevo en un momento.");
+        }).finally(function () {
+          btn.disabled = false;
+          btn.textContent = original;
+        });
       });
 
       /* ---------- Panel de Yoyis (vista previa) ---------- */

@@ -374,11 +374,11 @@
             <button class="btn btn-square" id="payOrderBtn" type="button" disabled>Pedir y pagar</button>
             <a class="btn btn-whatsapp" id="waOrderBtn" href="#pedido" disabled>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5-.3.6-.6.8-.4 1.1.7 1.2 1.6 2 2.8 2.6.3.2.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 .9c.3.2.5.3.6.4 0 .1 0 .7-.2 1.2z"/></svg>
-              ¿Prefieres ordenar por WhatsApp?
+              Ordenar por WhatsApp (sin pagar en línea)
             </a>
             <button class="btn btn-copy" id="copyOrderBtn" type="button">Copiar mi pedido</button>
           </div>
-          <p class="pay-first-note">Como es comida recién hecha, tu pedido se paga al ordenar para apartarlo — así queda reservado para ti. Al pagar, Yoyis recibe tu pedido al instante. ¿Prefieres pagar al recoger? Avísanos por WhatsApp.</p>
+          <p class="pay-first-note">Como es comida recién hecha, tu pedido se paga al ordenar para apartarlo — así queda reservado para ti. Al pagar aquí, Yoyis recibe tu pedido al instante. Si ordenas por WhatsApp, tu pedido NO queda pagado: Yoyis te confirma el pago antes de prepararlo.</p>
           <p class="order-hint">Escribe tu nombre, toca «Pedir y pagar» y paga el total exacto en la página segura de Square: Yoyis recibe tu pedido en ese momento y lo prepara para recoger en Hutto, TX. Sin registro y sin apps raras.</p>
         </div>
       </section>
@@ -416,8 +416,8 @@
 
         <div class="pay-steps">
           <div class="step"><span class="num">1</span><p><strong>Arma tu carrito</strong>Elige tus tamales y tu salsa aquí arriba, con el botón +.</p></div>
-          <div class="step"><span class="num">2</span><p><strong>Paga con Square</strong>Escanea el QR o toca «Pagar ahora» y paga el total de tu carrito.</p></div>
-          <div class="step"><span class="num">3</span><p><strong>Manda tu pedido y recoge</strong>Envía tu pedido por WhatsApp desde el carrito y guarda tu comprobante de Square: con él Yoyis te entrega tu pedido al recogerlo.</p></div>
+          <div class="step"><span class="num">2</span><p><strong>Pídelo y págalo</strong>Toca «Pedir y pagar» en el carrito y paga el total exacto en la página segura de Square.</p></div>
+          <div class="step"><span class="num">3</span><p><strong>Recoge tu pedido</strong>Al pagar, Yoyis recibe tu pedido al instante y lo prepara para ti. Solo pasa a recogerlo en Hutto, TX.</p></div>
         </div>
       </section>
 
@@ -426,7 +426,7 @@
         <div class="tiles">
           <div class="tile">
             <h3><span class="ic">📍</span>Recogida local en Hutto, TX</h3>
-            <p>La venta es solo local: compras en la página, pagas con Square, mandas tu pedido por WhatsApp y pasas a recogerlo — te lo llevas tú. El lugar y el horario exactos de recogida te los confirma Yoyis por WhatsApp.</p>
+            <p>La venta es solo local: compras y pagas en la página, Yoyis recibe tu pedido al instante y pasas a recogerlo — te lo llevas tú. El lugar y el horario exactos de recogida te los confirma Yoyis por WhatsApp.</p>
           </div>
           <div class="tile">
             <h3><span class="ic">🎉</span>Fiestas y pedidos grandes</h3>
@@ -659,7 +659,7 @@
           lines.push(s);
         });
         if (allPriced(items)) lines.push("Total: " + money(cartTotal(items)));
-        lines.push("Ya pagué con Square.");
+        lines.push("⚠️ Todavía NO pagué en línea: quiero acordar el pago contigo.");
         var name = document.getElementById("custName").value.trim();
         var phone = document.getElementById("custPhone").value.trim();
         var note = document.getElementById("custNote").value.trim();

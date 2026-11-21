@@ -180,6 +180,12 @@
       }
       .pay-pending strong{ display:block; font-size:1.02rem; }
       @media (prefers-color-scheme: dark){ .pay-pending{ background:#3a2a08; color:#ffe1a1; } }
+      .paid-banner{
+        max-width:640px; margin:22px auto 0; text-align:center; background:#e7f7e7; color:#14532d;
+        border:1.5px solid #22c55e; border-radius:14px; padding:16px 18px; font-size:1rem;
+      }
+      .paid-banner strong{ display:block; font-size:1.15rem; margin-bottom:4px; }
+      @media (prefers-color-scheme: dark){ .paid-banner{ background:#0f2e1a; color:#bbf7d0; } }
       .pay-card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; max-width:520px; margin:0 auto; display:flex; flex-direction:column; }
       .pay-top{ padding:16px 20px 12px; display:flex; align-items:center; gap:12px; }
       .pay-badge{ width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center; background:var(--square); flex:none; }
@@ -289,6 +295,10 @@
     </header>
 
     <main class="wrap">
+      <div class="paid-banner" id="paidBanner" hidden>
+        <strong data-i18n="paidTitle">¡Pago recibido! 🎉</strong>
+        <span data-i18n="paidText">Tu pedido ya le llegó a Yoyis y lo está preparando. Solo pasa a recogerlo en Hutto, TX — si necesita algo más, te contacta a tu teléfono.</span>
+      </div>
       <!-- Galería -->
       <section id="galeria" aria-label="Fotos de los tamales, la salsa y los moles" data-i18n-aria="ariaGallery">
         <div class="sec-head">
@@ -960,7 +970,9 @@
           fiestaReq: "Escribe tu nombre y tu teléfono para que Yoyis te contacte 🎉",
           sending: "Enviando…",
           fiestaOk: "¡Solicitud enviada! 🎉 Yoyis te contactará a tu teléfono.",
-          fiestaErr: "No se pudo enviar. Intenta de nuevo en un momento."
+          fiestaErr: "No se pudo enviar. Intenta de nuevo en un momento.",
+          paidTitle: "¡Pago recibido! 🎉",
+          paidText: "Tu pedido ya le llegó a Yoyis y lo está preparando. Solo pasa a recogerlo en Hutto, TX — si necesita algo más, te contacta a tu teléfono."
         },
         en: {
           galHint: "👆 Tap any photo and we will tell you what each dish is.",
@@ -1089,7 +1101,9 @@
           fiestaReq: "Type your name and phone number so Yoyis can reach you 🎉",
           sending: "Sending…",
           fiestaOk: "Request sent! 🎉 Yoyis will contact you at your phone number.",
-          fiestaErr: "It could not be sent. Please try again in a moment."
+          fiestaErr: "It could not be sent. Please try again in a moment.",
+          paidTitle: "Payment received! 🎉",
+          paidText: "Yoyis has your order and is getting it ready. Just come pick it up in Hutto, TX — if she needs anything else, she will reach out to your phone."
         }
       };
       var LANG = "es";
@@ -1160,6 +1174,19 @@
 
       setLang(LANG);
       renderSquare();
+
+      /* ---------- Regreso de Square tras pagar (?pagado=1) ---------- */
+      try {
+        if (new URLSearchParams(location.search).get("pagado") === "1") {
+          var paidBanner = document.getElementById("paidBanner");
+          if (paidBanner) {
+            paidBanner.hidden = false;
+            paidBanner.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+          toast(t("paidTitle"));
+          history.replaceState(null, "", location.pathname);
+        }
+      } catch (e) {}
     </script>
   </body>
 </html>

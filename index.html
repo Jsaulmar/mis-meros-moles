@@ -180,6 +180,7 @@
       }
       .pay-pending strong{ display:block; font-size:1.02rem; }
       @media (prefers-color-scheme: dark){ .pay-pending{ background:#3a2a08; color:#ffe1a1; } }
+      .pay-note{ font-size:.95rem; opacity:.85; margin:10px 0 2px; }
       .paid-banner{
         max-width:640px; margin:22px auto 0; text-align:center; background:#e7f7e7; color:#14532d;
         border:1.5px solid #22c55e; border-radius:14px; padding:16px 18px; font-size:1rem;
@@ -402,7 +403,7 @@
           <p data-i18n="payP">Un solo método, sin vueltas: pagas con tu tarjeta, Apple Pay o Google Pay en la página segura de Square. Sin lector y sin que nadie toque tu tarjeta.</p>
         </div>
         <div class="pay-pending" id="payPending">
-          <span data-i18n="payPending"><strong>Pago con Square activo ✅</strong> Ya puedes pagar con tarjeta, Apple Pay o Google Pay en la página segura de Square. Para que el monto vaya exacto y sin error, arma tu carrito y toca «Pedir y pagar». Este enlace directo es para pagar en persona: si lo usas, en Square escribe el monto EXACTO de tu pedido: <a href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener" style="color:inherit; font-weight:700;">square.link/u/lhUUS01Z</a></span>
+          <span data-i18n="payPending"><strong>Pago con Square activo ✅</strong> Arma tu carrito y toca «Pedir y pagar»: pones tu nombre, pagas el total exacto con tarjeta, Apple Pay o Google Pay en la página segura de Square, y tu pedido le llega a Yoyis al instante.</span>
         </div>
         <article class="pay-card">
           <div class="pay-top">
@@ -413,15 +414,7 @@
           </div>
           <div class="pay-body">
             <p class="pay-summary" id="sqSummary">Tu carrito está vacío<small>Agrega tamales o salsa en el menú y aquí verás tu total.</small></p>
-            <div class="pay-data tbd" id="sqData">Aquí aparecerá el enlace de pago de Square de Yoyis</div>
-            <div class="pay-qr" id="sqQr" hidden>
-              <div class="qrbox" id="sqQrBox"></div>
-              <small data-i18n="qrScan">Escanea con tu teléfono para pagar</small>
-            </div>
-            <div class="pay-actions">
-              <button class="btn btn-ghost" id="sqCopy" type="button" disabled data-i18n="sqCopyBtn">Copiar enlace</button>
-              <a class="btn btn-square" id="sqGo" href="#pagar" disabled style="flex:1;" data-i18n="sqGoBtn">Pagar ahora</a>
-            </div>
+            <p class="pay-note" data-i18n="payNote">El pago se hace desde tu carrito con el botón «Pedir y pagar»: ahí pones tu nombre — así Yoyis sabe de quién es cada pedido — y pagas el total exacto. Ya no hay enlace directo sin nombre, para que ningún pedido se confunda.</p>
           </div>
         </article>
 
@@ -781,29 +774,12 @@
       }
 
       function renderSquare() {
-        document.getElementById("payPending").hidden = !CONFIG.square;
-        var sd = document.getElementById("sqData");
-        var sc = document.getElementById("sqCopy");
-        var sg = document.getElementById("sqGo");
-        var sq = document.getElementById("sqQr");
-        if (CONFIG.square) {
-          sd.textContent = CONFIG.square; sd.classList.remove("tbd");
-          sc.disabled = false;
-          sg.removeAttribute("disabled"); sg.setAttribute("href", CONFIG.square);
-          sg.setAttribute("target", "_blank"); sg.setAttribute("rel", "noopener");
-          sq.hidden = false; makeQr("sqQrBox", CONFIG.square);
-        } else {
-          sd.textContent = t("sqDataPh"); sd.classList.add("tbd");
-          sc.disabled = true;
-          sg.setAttribute("disabled", ""); sg.setAttribute("href", "#pagar");
-          sg.removeAttribute("target");
-          sq.hidden = true;
-        }
+        // El pago en línea es SOLO desde el carrito («Pedir y pagar», con
+        // nombre obligatorio). El enlace directo de Square ya no se ofrece
+        // en la página: un pago sin nombre confunde los pedidos. El QR
+        // directo queda solo en el cartelón impreso, para pago en persona.
+        document.getElementById("payPending").hidden = false;
       }
-
-      document.getElementById("sqCopy").addEventListener("click", function () {
-        if (CONFIG.square) copyText(CONFIG.square, t("sqLinkCopied"));
-      });
 
       /* ---------- Fiestas y pedidos grandes ---------- */
       document.getElementById("fiestaCopyBtn").addEventListener("click", function () {
@@ -909,7 +885,8 @@
           ariaPay: "Pagar con Square",
           payH2: 'Paga con <span class="a">Square</span>',
           payP: "Un solo método, sin vueltas: pagas con tu tarjeta, Apple Pay o Google Pay en la página segura de Square. Sin lector y sin que nadie toque tu tarjeta.",
-          payPending: '<strong>Pago con Square activo ✅</strong> Ya puedes pagar con tarjeta, Apple Pay o Google Pay en la página segura de Square. Para que el monto vaya exacto y sin error, arma tu carrito y toca «Pedir y pagar». Este enlace directo es para pagar en persona: si lo usas, en Square escribe el monto EXACTO de tu pedido: <a href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener" style="color:inherit; font-weight:700;">square.link/u/lhUUS01Z</a>',
+          payPending: '<strong>Pago con Square activo ✅</strong> Arma tu carrito y toca «Pedir y pagar»: pones tu nombre, pagas el total exacto con tarjeta, Apple Pay o Google Pay en la página segura de Square, y tu pedido le llega a Yoyis al instante.',
+          payNote: "El pago se hace desde tu carrito con el botón «Pedir y pagar»: ahí pones tu nombre — así Yoyis sabe de quién es cada pedido — y pagas el total exacto. Ya no hay enlace directo sin nombre, para que ningún pedido se confunda.",
           payMethods: "Tarjeta · Apple Pay · Google Pay",
           qrScan: "Escanea con tu teléfono para pagar",
           sqCopyBtn: "Copiar enlace",
@@ -1041,7 +1018,8 @@
           ariaPay: "Pay with Square",
           payH2: 'Pay with <span class="a">Square</span>',
           payP: "One single method, no hassle: pay with your card, Apple Pay or Google Pay on the secure Square page. No card reader, and nobody ever touches your card.",
-          payPending: '<strong>Square payment is live ✅</strong> You can now pay by card, Apple Pay or Google Pay on the secure Square page. For the exact amount with no mistakes, build your cart and tap «Order and pay». This direct link is for paying in person: if you use it, enter the EXACT amount of your order in Square: <a href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener" style="color:inherit; font-weight:700;">square.link/u/lhUUS01Z</a>',
+          payPending: '<strong>Square payment is live ✅</strong> Build your cart and tap «Order and pay»: you enter your name, pay the exact total by card, Apple Pay or Google Pay on the secure Square page, and your order reaches Yoyis right away.',
+          payNote: "Payment happens from your cart with the «Order and pay» button: you enter your name there — so Yoyis knows whose order is whose — and you pay the exact total. There is no nameless direct link anymore, so no order gets mixed up.",
           payMethods: "Card · Apple Pay · Google Pay",
           qrScan: "Scan with your phone to pay",
           sqCopyBtn: "Copy link",

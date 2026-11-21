@@ -345,8 +345,8 @@
           <p class="how-title">Así funciona:</p>
           <ol class="how-list">
             <li><span class="how-num" aria-hidden="true">1</span><span>Arma tu pedido</span></li>
-            <li><span class="how-num" aria-hidden="true">2</span><span>Págalo con Square</span></li>
-            <li><span class="how-num" aria-hidden="true">3</span><span>Manda tu pedido por WhatsApp</span></li>
+            <li><span class="how-num" aria-hidden="true">2</span><span>Pídelo y págalo con Square</span></li>
+            <li><span class="how-num" aria-hidden="true">3</span><span>Yoyis recibe tu pedido al instante</span></li>
             <li><span class="how-num" aria-hidden="true">4</span><span>Recoge en Hutto, TX</span></li>
           </ol>
         </div>
@@ -363,19 +363,23 @@
             <input id="custName" type="text" autocomplete="name" placeholder="Ej. María González" />
           </div>
           <div class="field">
+            <label for="custPhone">Tu teléfono (opcional)</label>
+            <input id="custPhone" type="tel" autocomplete="tel" placeholder="Ej. 512-555-1234" />
+          </div>
+          <div class="field">
             <label for="custNote">Nota para Yoyis (opcional)</label>
             <textarea id="custNote" rows="2" placeholder="Ej. Lo recojo a las 2 pm · Que pique poquito"></textarea>
           </div>
           <div class="order-actions">
-            <a class="btn btn-square" href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener">Paso 2 · Pagar con Square</a>
+            <button class="btn btn-square" id="payOrderBtn" type="button" disabled>Pedir y pagar</button>
             <a class="btn btn-whatsapp" id="waOrderBtn" href="#pedido" disabled>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5-.3.6-.6.8-.4 1.1.7 1.2 1.6 2 2.8 2.6.3.2.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 .9c.3.2.5.3.6.4 0 .1 0 .7-.2 1.2z"/></svg>
-              Paso 3 · Enviar pedido por WhatsApp
+              ¿Prefieres ordenar por WhatsApp?
             </a>
             <button class="btn btn-copy" id="copyOrderBtn" type="button">Copiar mi pedido</button>
           </div>
-          <p class="pay-first-note">Como es comida recién hecha, tu pedido se paga al ordenar para apartarlo — así queda reservado para ti. ¿Prefieres pagar al recoger? Avísanos por WhatsApp.</p>
-          <p class="order-hint">Arma tu carrito, paga el total con Square y manda tu pedido por WhatsApp para que Yoyis lo tenga listo para recoger. Sin registro y sin apps raras.</p>
+          <p class="pay-first-note">Como es comida recién hecha, tu pedido se paga al ordenar para apartarlo — así queda reservado para ti. Al pagar, Yoyis recibe tu pedido al instante. ¿Prefieres pagar al recoger? Avísanos por WhatsApp.</p>
+          <p class="order-hint">Escribe tu nombre, toca «Pedir y pagar» y paga el total exacto en la página segura de Square: Yoyis recibe tu pedido en ese momento y lo prepara para recoger en Hutto, TX. Sin registro y sin apps raras.</p>
         </div>
       </section>
 
@@ -522,6 +526,7 @@
          ============================================================ */
       var CONFIG = {
         square: "https://square.link/u/lhUUS01Z",
+        backend: "https://pedidos.mis-meros-moles-by-yoyis.workers.dev",
         whatsapp: "15049090547"
       };
 
@@ -656,8 +661,10 @@
         if (allPriced(items)) lines.push("Total: " + money(cartTotal(items)));
         lines.push("Ya pagué con Square.");
         var name = document.getElementById("custName").value.trim();
+        var phone = document.getElementById("custPhone").value.trim();
         var note = document.getElementById("custNote").value.trim();
         if (name) lines.push("Nombre: " + name);
+        if (phone) lines.push("Tel: " + phone);
         if (note) lines.push("Nota: " + note);
         lines.push("¡Gracias!");
         return lines.join("\n");
@@ -690,7 +697,47 @@
         }
         renderSquareSummary(items);
         renderWhatsapp(items);
+        renderPayBtn(items);
       }
+
+      /* ---------- Pedir y pagar (backend: link de Square con total exacto) ---------- */
+      function renderPayBtn(items) {
+        var btn = document.getElementById("payOrderBtn");
+        if (allPriced(items)) {
+          btn.disabled = false;
+          btn.textContent = "Pedir y pagar · " + money(cartTotal(items));
+        } else {
+          btn.disabled = true;
+          btn.textContent = "Pedir y pagar";
+        }
+      }
+
+      document.getElementById("payOrderBtn").addEventListener("click", async function () {
+        var items = selected().map(function (p) { return { id: p.id, qty: cart[p.id] }; });
+        if (!items.length) { toast("Primero agrega algo del menú 🌶️"); return; }
+        var name = document.getElementById("custName").value.trim();
+        if (!name) { toast("Escribe tu nombre para el pedido 🙂"); document.getElementById("custName").focus(); return; }
+        var btn = this;
+        var original = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "Creando tu pago…";
+        try {
+          var res = await fetch(CONFIG.backend + "/api/pedido", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items: items, name: name,
+              phone: document.getElementById("custPhone").value.trim(),
+              note: document.getElementById("custNote").value.trim() })
+          });
+          var data = await res.json();
+          if (!res.ok || !data.payUrl) throw new Error(data.error || "error");
+          window.location.href = data.payUrl;
+        } catch (e) {
+          btn.disabled = false;
+          btn.textContent = original;
+          toast("No se pudo crear el pago. Intenta de nuevo o pide por WhatsApp.");
+        }
+      });
 
       /* ---------- Enviar pedido por WhatsApp ---------- */
       function renderWhatsapp(items) {
@@ -707,7 +754,7 @@
         }
       }
 
-      ["custName", "custNote"].forEach(function (id) {
+      ["custName", "custPhone", "custNote"].forEach(function (id) {
         document.getElementById(id).addEventListener("input", function () { renderOrder(); });
       });
 

@@ -402,7 +402,7 @@
           <p data-i18n="payP">Un solo método, sin vueltas: pagas con tu tarjeta, Apple Pay o Google Pay en la página segura de Square. Sin lector y sin que nadie toque tu tarjeta.</p>
         </div>
         <div class="pay-pending" id="payPending">
-          <span data-i18n="payPending"><strong>Pago con Square activo ✅</strong> Ya puedes pagar con tarjeta, Apple Pay o Google Pay en la página segura de Square. Toca «Pagar ahora» o escanea el código QR, y en Square escribes el monto de tu pedido: <a href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener" style="color:inherit; font-weight:700;">square.link/u/lhUUS01Z</a></span>
+          <span data-i18n="payPending"><strong>Pago con Square activo ✅</strong> Ya puedes pagar con tarjeta, Apple Pay o Google Pay en la página segura de Square. Para que el monto vaya exacto y sin error, arma tu carrito y toca «Pedir y pagar». Este enlace directo es para pagar en persona: si lo usas, en Square escribe el monto EXACTO de tu pedido: <a href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener" style="color:inherit; font-weight:700;">square.link/u/lhUUS01Z</a></span>
         </div>
         <article class="pay-card">
           <div class="pay-top">
@@ -433,7 +433,7 @@
       </section>
 
       <!-- Recogida -->
-      <section id="entrega" aria-label="Recogida local y fiestas">
+      <section id="entrega" aria-label="Recogida local y fiestas" data-i18n-aria="ariaPickup">
         <div class="tiles">
           <div class="tile">
             <h3 data-i18n="tile1T"><span class="ic">📍</span>Recogida local en Hutto, TX</h3>
@@ -741,6 +741,12 @@
         }
       });
 
+      /* Si el cliente regresa de Square con el botón «Atrás», el navegador
+         restaura la página tal cual quedó (botón en «Creando tu pago…» y
+         deshabilitado). Al mostrarse la página de nuevo, se redibuja el
+         pedido para que el botón vuelva a su estado correcto. */
+      window.addEventListener("pageshow", function () { renderOrder(); });
+
 
       ["custName", "custPhone", "custNote"].forEach(function (id) {
         document.getElementById(id).addEventListener("input", function () { renderOrder(); });
@@ -903,7 +909,7 @@
           ariaPay: "Pagar con Square",
           payH2: 'Paga con <span class="a">Square</span>',
           payP: "Un solo método, sin vueltas: pagas con tu tarjeta, Apple Pay o Google Pay en la página segura de Square. Sin lector y sin que nadie toque tu tarjeta.",
-          payPending: '<strong>Pago con Square activo ✅</strong> Ya puedes pagar con tarjeta, Apple Pay o Google Pay en la página segura de Square. Toca «Pagar ahora» o escanea el código QR, y en Square escribes el monto de tu pedido: <a href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener" style="color:inherit; font-weight:700;">square.link/u/lhUUS01Z</a>',
+          payPending: '<strong>Pago con Square activo ✅</strong> Ya puedes pagar con tarjeta, Apple Pay o Google Pay en la página segura de Square. Para que el monto vaya exacto y sin error, arma tu carrito y toca «Pedir y pagar». Este enlace directo es para pagar en persona: si lo usas, en Square escribe el monto EXACTO de tu pedido: <a href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener" style="color:inherit; font-weight:700;">square.link/u/lhUUS01Z</a>',
           payMethods: "Tarjeta · Apple Pay · Google Pay",
           qrScan: "Escanea con tu teléfono para pagar",
           sqCopyBtn: "Copiar enlace",
@@ -916,6 +922,7 @@
           tile2T: '<span class="ic">🎉</span>Fiestas y pedidos grandes',
           tile2P: '¿Cumpleaños, bautizo o reunión familiar? Llena el <a href="#fiestas">formulario cortito</a> y Yoyis te cotiza tus tamales por mayoreo con anticipación.',
           ariaFiesta: "Formulario para fiestas y pedidos grandes",
+          ariaPickup: "Recogida local y fiestas",
           fiestaH2: 'Fiestas y <span class="b">pedidos grandes</span>',
           fiestaP: "Cuéntanos de tu evento en menos de un minuto y Yoyis te cotiza.",
           fiestaPanelH3: "Pide tu cotización",
@@ -1034,7 +1041,7 @@
           ariaPay: "Pay with Square",
           payH2: 'Pay with <span class="a">Square</span>',
           payP: "One single method, no hassle: pay with your card, Apple Pay or Google Pay on the secure Square page. No card reader, and nobody ever touches your card.",
-          payPending: '<strong>Square payment is live ✅</strong> You can now pay by card, Apple Pay or Google Pay on the secure Square page. Tap «Pay now» or scan the QR code, and enter your order amount in Square: <a href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener" style="color:inherit; font-weight:700;">square.link/u/lhUUS01Z</a>',
+          payPending: '<strong>Square payment is live ✅</strong> You can now pay by card, Apple Pay or Google Pay on the secure Square page. For the exact amount with no mistakes, build your cart and tap «Order and pay». This direct link is for paying in person: if you use it, enter the EXACT amount of your order in Square: <a href="https://square.link/u/lhUUS01Z" target="_blank" rel="noopener" style="color:inherit; font-weight:700;">square.link/u/lhUUS01Z</a>',
           payMethods: "Card · Apple Pay · Google Pay",
           qrScan: "Scan with your phone to pay",
           sqCopyBtn: "Copy link",
@@ -1047,6 +1054,7 @@
           tile2T: '<span class="ic">🎉</span>Parties and large orders',
           tile2P: 'Birthday, baptism or family gathering? Fill out the <a href="#fiestas">short form</a> and Yoyis will quote your bulk tamale order ahead of time.',
           ariaFiesta: "Form for parties and large orders",
+          ariaPickup: "Local pickup and parties",
           fiestaH2: 'Parties and <span class="b">large orders</span>',
           fiestaP: "Tell us about your event in under a minute and Yoyis will send you a quote.",
           fiestaPanelH3: "Request your quote",

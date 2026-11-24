@@ -97,6 +97,9 @@
         background:linear-gradient(transparent, rgba(10,2,6,.78));
       }
       .ref-note{ text-align:center; color:var(--ink-soft); font-size:.9rem; margin:14px auto 0; max-width:560px; }
+      .prox-box{ max-width:640px; margin:0 auto 20px; background:var(--surface2); border:2px dashed var(--chile); border-radius:var(--radius); padding:16px 20px 6px; text-align:center; }
+      .prox-box p{ color:var(--ink); font-size:1.02rem; line-height:1.55; margin:10px 0 12px; }
+      .prox-badge{ display:inline-block; background:var(--chile); color:#fff; font-weight:800; letter-spacing:.14em; text-transform:uppercase; font-size:.78rem; padding:5px 14px; border-radius:999px; }
       @media (max-width:760px){ .gallery{ grid-template-columns:1fr 1fr; } .gallery img{ height:180px; } }
 
       /* ---------- Menu ---------- */
@@ -347,8 +350,12 @@
       <!-- Próximamente: pastas artesanales -->
       <section id="pastas" aria-label="Pastas artesanales de mole, próximamente" data-i18n-aria="ariaPastas">
         <div class="sec-head">
-          <h2 data-i18n="proxH2">Próximamente: <span class="a">las pastas de Gloria</span></h2>
-          <p data-i18n="proxP">Gloria está preparando sus pastas artesanales de molino, listas para diluir en caldo y cocinar el mole en tu casa. Todavía no están a la venta — esto es lo que viene:</p>
+          <h2 data-i18n="proxH2">Las pastas de <span class="a">Gloria</span></h2>
+          <p data-i18n="proxP">Muy pronto, para que prepares el mole en tu casa. Esto es lo que viene:</p>
+        </div>
+        <div class="prox-box">
+          <span class="prox-badge" data-i18n="proxBadge">Próximamente</span>
+          <p data-i18n="proxBox">Mole artesanal en pasta, hecho por Yoyis con ingredientes orgánicos y molido artesanalmente, listo para diluir en caldo y preparar en casa: mole rojo estilo Guanajuato, pipián verde estilo Querétaro y chimpa, el mole verde de Tierra Caliente.</p>
         </div>
         <div class="gallery">
           <figure data-dish="pastaroja" role="button" tabindex="0" aria-haspopup="dialog">
@@ -885,8 +892,10 @@
           gCap8: "Para compartir en familia",
           refNote: "La salsa macha es la foto real del frasco de Gloria. Los tamales y los moles son fotos de referencia de cómo se sirven — esta vez el mole no está a la venta, solo los tamales y la salsa.",
           ariaPastas: "Pastas artesanales de mole, próximamente",
-          proxH2: 'Próximamente: <span class="a">las pastas de Gloria</span>',
-          proxP: "Gloria está preparando sus pastas artesanales de molino, listas para diluir en caldo y cocinar el mole en tu casa. Todavía no están a la venta — esto es lo que viene:",
+          proxH2: 'Las pastas de <span class="a">Gloria</span>',
+          proxP: "Muy pronto, para que prepares el mole en tu casa. Esto es lo que viene:",
+          proxBadge: "Próximamente",
+          proxBox: "Mole artesanal en pasta, hecho por Yoyis con ingredientes orgánicos y molido artesanalmente, listo para diluir en caldo y preparar en casa: mole rojo estilo Guanajuato, pipián verde estilo Querétaro y chimpa, el mole verde de Tierra Caliente.",
           pAlt1: "Domo de pasta de mole rojo en plato de barro, con chiles secos, ajonjolí y chocolate",
           pCap1: "Pasta de mole rojo · estilo Guanajuato",
           pAlt2: "Montículo de pasta de pipián verde en cazuela de barro, con pepitas, tomatillos y chiles serranos",
@@ -1030,8 +1039,10 @@
           gCap8: "Made for family sharing",
           refNote: "The salsa macha photo is Gloria's real jar. The tamales and moles are reference photos of how they are served — this time the mole is not for sale, only the tamales and the salsa.",
           ariaPastas: "Artisanal mole pastes, coming soon",
-          proxH2: 'Coming soon: <span class="a">Gloria\'s mole pastes</span>',
-          proxP: "Gloria is getting her artisanal mill-ground mole pastes ready — just dilute them in broth and cook mole at home. They are not on sale yet — here is what is coming:",
+          proxH2: '<span class="a">Gloria\'s</span> mole pastes',
+          proxP: "Coming very soon, so you can make mole at home. Here is what is coming:",
+          proxBadge: "Coming soon",
+          proxBox: "Artisanal mole paste, made by Yoyis with organic ingredients and traditionally ground, ready to dilute in broth and make at home: red mole, Guanajuato style; green pipián, Querétaro style; and chimpa, the green mole of Tierra Caliente.",
           pAlt1: "Dome of red mole paste on a clay plate, with dried chiles, sesame and chocolate",
           pCap1: "Red mole paste · Guanajuato style",
           pAlt2: "Mound of green pipián paste in a clay pot, with pumpkin seeds, tomatillos and serrano chiles",
